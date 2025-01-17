@@ -26,7 +26,6 @@ final class CuteCatsAPIService: CuteCatsService {
     
     private let catListSubject = CurrentValueSubject<Result<[CatResponse], Error>, Error>(.success([]))
     private let httpClient: HTTPClient
-    private var page = 1
     
     init(httpClient: HTTPClient = URLSessionNetwork()) {
         self.httpClient = httpClient
@@ -37,8 +36,6 @@ final class CuteCatsAPIService: CuteCatsService {
             catListSubject.send(.failure(QueryError.wrongURL))
             return
         }
-        
-        page += 1
         Task {
             do {
                 let catResponse: [CatResponse] = try await httpClient.get(from: url, httpMethod: .GET, headers: nil, body: nil)
